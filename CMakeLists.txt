@@ -4,4 +4,10 @@ project(C_final_project)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(C_final_project main.cpp)
+add_executable(C_final_project main.cpp
+        Fight.cpp
+        Fight.h
+        Fighter.cpp
+        Fighter.h
+        FightSimulator.cpp
+        FightSimulator.h)
