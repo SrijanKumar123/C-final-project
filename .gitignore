@@ -42,6 +42,7 @@
 build/
 Build/
 build-*/
+cmake-build-*/
 
 # CMake generated files
 CMakeFiles/
@@ -51,11 +52,21 @@ Makefile
 install_manifest.txt
 compile_commands.json
 
+# IDEs and Editors
+.idea/
+.vscode/
+.vs/
+*.user
+
 # Temporary files
 *.tmp
 *.log
 *.bak
 *.swp
+
+# OS generated files
+.DS_Store
+Thumbs.db
 
 # vcpkg
 vcpkg_installed/
