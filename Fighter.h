@@ -4,26 +4,34 @@
 
 #ifndef C_FINAL_PROJECT_FIGHTER_H
 #define C_FINAL_PROJECT_FIGHTER_H
+using namespace std;
 
-#include <string>
-
-// Srijan's class
 class Fighter {
 private:
-    std::string name_;
-    int striking_{};
-    int grappling_{};
-    int defense_{};
-    int stamina_{};
-    int health_{};
-    int wins_{};
-    int losses_{};
-
+    string name_;
+    int striking_;
+    int grappling_;
+    int defense_;
+    int stamina_;
+    int health_;
+    int wins_;
+    int losses_;
 public:
-    std::string getName() const;
+    Fighter();
+    Fighter(const string&name);
+    string getName() const;
     int getStriking() const;
-    void takeDamage(int amount);
+    int getGrappling() const;
+    int getDefense() const;
+    int getStamina() const;
+    int getHealth() const;
+    int getWins() const;
+    int getLosses() const;
+    void takeDamage(int damage);
+    void useStamina(int amount);
+    void resetHealth();
+    void resetStamina();
     void updateRecord(bool won);
 };
-
 #endif //C_FINAL_PROJECT_FIGHTER_H
+
