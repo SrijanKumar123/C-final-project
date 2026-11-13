@@ -10,4 +10,8 @@ add_executable(C_final_project main.cpp
         Fighter.cpp
         Fighter.h
         FightSimulator.cpp
-        FightSimulator.h)
+        FightSimulator.h
+        Striker.cpp
+        Striker.h
+        Grappler.cpp
+        Grappler.h)
