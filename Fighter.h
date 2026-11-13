@@ -19,6 +19,7 @@ private:
 public:
     Fighter();
     Fighter(const string&name);
+    Fighter(const string& name, int striking, int grappling, int defense);
     string getName() const;
     int getStriking() const;
     int getGrappling() const;
@@ -32,6 +33,9 @@ public:
     void resetHealth();
     void resetStamina();
     void updateRecord(bool won);
+    bool knockedOut() const;
+    void recoverStamina(int amount);
+    bool isExhausted() const;
 };
 #endif //C_FINAL_PROJECT_FIGHTER_H
 

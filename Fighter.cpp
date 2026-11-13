@@ -20,6 +20,13 @@ Fighter::Fighter(const string &name): Fighter() {
     name_ = name;
 }
 
+Fighter::Fighter(const string &name, int striking, int grappling, int defense): Fighter() {
+    name_ = name;
+    striking_ = striking;
+    grappling_ = grappling;
+    defense_ = defense;
+}
+
 string Fighter::getName() const {
     return name_;
 }
@@ -72,5 +79,39 @@ void Fighter::useStamina(int amount) {
 
 void Fighter::resetHealth() {
     health_ = 100;
+}
 
+void Fighter::resetStamina() {
+    stamina_ = 100;
+}
+
+void Fighter::updateRecord(bool won) {
+    if (won == true) {
+        wins_++;
+    } else {
+        losses_++;
+    }
+}
+
+bool Fighter::knockedOut() const {
+    if (health_ == 0) {
+        return true;
+    }
+    return false;
+}
+
+void Fighter::recoverStamina(int amount) {
+    if (amount > 0) {
+        stamina_ += amount;
+    }
+    if (stamina_ > 100) {
+        stamina_ = 100;
+    }
+}
+
+bool Fighter::isExhausted() const {
+    if (stamina_ == 0) {
+        return true;
+    }
+    return false;
 }
