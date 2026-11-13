@@ -36,6 +36,7 @@ public:
     bool knockedOut() const;
     void recoverStamina(int amount);
     bool isExhausted() const;
+    virtual ~Fighter() = default;
 };
 #endif //C_FINAL_PROJECT_FIGHTER_H
 

@@ -3,19 +3,21 @@
 //
 #include <iostream>
 using namespace std;
-#include "Fighter.h"
 #include <vector>
-#include <utility>
-#include <limits>
+#include <memory>
+#include "Fighter.h"
+#include "Striker.h"
+#include "Grappler.h"
+#include<limits>
 
-void displayFighter(const vector<Fighter>& fighters) {
+void displayFighter(const vector<unique_ptr<Fighter>>& fighters) {
     cout << "=====" << "AVAILABLE FIGHTERS" << "=====" << endl;
     for (int i = 0; i < fighters.size(); i++) {
-        cout << i + 1 << ". " << fighters[i].getName() << endl;
+        cout << i + 1 << ". " << fighters[i]->getName() << endl;
     }
 }
 
-pair<int,int> selectFighters(const vector<Fighter>& fighters) {
+pair<int,int> selectFighters(const vector<unique_ptr<Fighter>>& fighters) {
     int fighter1;
     int fighter2;
     while (true) {
@@ -45,27 +47,26 @@ pair<int,int> selectFighters(const vector<Fighter>& fighters) {
             cout << "You cannot select the same fighter twice." << endl;
             continue;
         }
-        cout << "Selected Fight: "<< fighters[fighter1 - 1].getName() << " vs "
-        << fighters[fighter2 - 1].getName() << endl;
+        cout << "Selected Fight: "<< fighters[fighter1 - 1]->getName() << " vs "
+        << fighters[fighter2 - 1]->getName() << endl;
         return {fighter1 - 1, fighter2 - 1};
     }
 }
 
 int main() {
-    vector<Fighter> fighters = {
-        Fighter("Alex Pereira", 95,90,89),
-        Fighter("Jon Jones", 98,95,93),
-        Fighter("GSP", 95,92, 94),
-        Fighter("Joshua Van", 95, 85,80),
-        Fighter("Dustin Poirier", 94,90,92),
-        Fighter("Charles Oliveria", 90,97,89),
-        Fighter("Illia Topuria", 97,95,95),
-        Fighter("Islam Makachev", 85,98, 95)
-        };
+    vector<unique_ptr<Fighter>> fighters;
+    fighters.push_back(make_unique<Striker>("Alex Pereira", 95, 90, 89));
+    fighters.push_back(make_unique<Fighter>("Jon Jones", 98, 95, 93));
+    fighters.push_back(make_unique<Fighter>("GSP", 95, 92, 94));
+    fighters.push_back(make_unique<Fighter>("Joshua Van", 95, 85, 80));
+    fighters.push_back(make_unique<Fighter>("Dustin Poirier", 94, 90, 92));
+    fighters.push_back(make_unique<Grappler>("Charles Oliveira", 90, 97, 89));
+    fighters.push_back(make_unique<Striker>("Ilia Topuria", 97, 95, 95));
+    fighters.push_back(make_unique<Grappler>("Islam Makhachev", 85, 98, 95));
     displayFighter(fighters);
     pair<int, int> selected = selectFighters(fighters);
-    Fighter& firstFighter = fighters[selected.first];
-    Fighter& secondFighter = fighters[selected.second];
+    Fighter& firstFighter = *fighters[selected.first];
+    Fighter& secondFighter = *fighters[selected.second];
     firstFighter.resetHealth();
     firstFighter.resetStamina();
     secondFighter.resetHealth();
