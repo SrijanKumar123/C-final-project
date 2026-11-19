@@ -4,6 +4,8 @@
 
 #ifndef C_FINAL_PROJECT_FIGHTER_H
 #define C_FINAL_PROJECT_FIGHTER_H
+#include <string>
+
 using namespace std;
 
 class Fighter {
@@ -17,9 +19,12 @@ private:
     int wins_;
     int losses_;
 public:
-    Fighter();
-    Fighter(const string&name);
-    Fighter(const string& name, int striking, int grappling, int defense);
+    explicit Fighter(const string& name,
+                 int striking  = 100,
+                 int grappling = 100,
+                 int defense = 100,
+                 int wins = 0,
+                 int losses = 0);
     string getName() const;
     int getStriking() const;
     int getGrappling() const;
