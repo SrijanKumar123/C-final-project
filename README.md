@@ -1,6 +1,13 @@
 # C-final-project
 UFC fight simulator
 
-TODO: Need to add Tests
+TODO: 
+- Need to add Tests
+- Change 'Fighter1' in Round Details to instead be Fight NAME !!
+- Append LOSSES to Fighter's record  (wins already seem to do so)!
 
-Possible Expansions: Allow Custom Fighters to be created from Menu
+- Finalize README at end
+
+Possible Expansions: 
+- Allow Custom Fighters to be created from Menu
+- Add Possible virtual dispatch print() to derived Fighter classes ?!

@@ -216,21 +216,63 @@ void runFight(vector<unique_ptr<Fighter>>& fighters, vector<Fight>& fightHistory
 
 // MENU functions
 
-int menuOption() {
-    int option;
-    string in {""};
-    cout << "Please choose one of the following MENU options to proceed:" << endl;
-    while (cin >> in) {   // cin.eof, cin.end or ...
-        // 0 - load save file
-        // 1 - start new fight (rounds?)
-        // 2 -
+int getMenuChoice() {
+    const string MENU = "===== UFC FIGHT SIMULATOR MENU =====\n"
+                        "1. View Available Fighters\n"
+                        "2. Start a New Fight\n"
+                        "3. View Fight History\n"
+                        "4. View Fighter Rankings\n"
+                        "5. Save Game (coming next)\n"
+                        "6. Load Game (coming next)\n"
+                        "7. Exit";
+    cout << endl << MENU << endl;
+
+    return getValidNumber("Choose an option (1-7):  ", 1, 7);
+}
+
+// Single Menu Selection
+bool handleMenuChoice(int choice,
+                      vector<unique_ptr<Fighter>>& fighters,
+                      vector<Fight>& fightHistory) {
+    switch (choice) {  // routing to game options
+        case 1:
+            displayFighters(fighters);
+            return true;
+        case 2:
+            runFight(fighters, fightHistory);
+            return true;
+        case 3:
+            displayFightHistory(fightHistory, fighters);
+            return true;
+        case 4:
+            displayRankings(fighters);
+            return true;
+        case 5:
+            cout << "Save functionality not implemented yet." << endl;
+            return true;
+        case 6:
+            cout << "Load functionality not implemented yet." << endl;
+            return true;
+        case 7:
+            cout << "Exiting UFC Fight Simulator. Goodbye!" << endl;
+            return false;
+        default:
+            cout << "Invalid option." << endl;
+            return true;
+    }
+}
+
+void runMenuLoop(vector<unique_ptr<Fighter>>& fighters, vector<Fight>& fightHistory) {
+    bool running = true;
+    while (running) {
+        int choice = getMenuChoice();
+        running = handleMenuChoice(choice, fighters, fightHistory);
     }
 }
 
 bool loadSaveFile(string fileName) {
     // return true if parse and File Opener is succesful, else FALSE
 }
-
 
 // Fill the Roster (passed in by reference) with Default UFC Fighters!
 void loadDefualtRoster(vector<unique_ptr<Fighter>>& fighters) {
@@ -246,16 +288,19 @@ void loadDefualtRoster(vector<unique_ptr<Fighter>>& fighters) {
 }
 
 int main() {
+    // srand(static_cast<unsigned>(time(nullptr))); maybe
+
     vector<Fight> fightHistory;
     vector<unique_ptr<Fighter>> fighters;
     loadDefualtRoster(fighters); // Load UFC Fighters
-displayFighters(fighters);
-    cout << "WELCOME to UFC Fight Simulator!" << endl;
+
+    //displayFighters(fighters);
 
     // Loop Menu Options
-    menuOption();
+    cout << "WELCOME to UFC Fight Simulator!" << endl;
+    runMenuLoop(fighters, fightHistory);
 
-
+    /*
     pair<int, int> selected = selectFighters(fighters);
     Fighter& firstFighter = *fighters[selected.first];
     Fighter& secondFighter = *fighters[selected.second];
@@ -263,6 +308,7 @@ displayFighters(fighters);
     firstFighter.resetStamina();
     secondFighter.resetHealth();
     secondFighter.resetStamina();
+    */
 
     return 0;
 }
