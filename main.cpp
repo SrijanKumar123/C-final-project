@@ -122,40 +122,96 @@ void displayRankings(const vector<unique_ptr<Fighter>>& fighters) {
     }
 }
 
+// RUN FIGHT
 pair<int,int> selectFighters(const vector<unique_ptr<Fighter>>& fighters) {
-    int fighter1;
-    int fighter2;
+    displayFighters(fighters);
+    int rosterSize = fighters.size();
     while (true) {
-        cout << "Select Fighter 1: ";
-        if (!(cin >> fighter1)) {
-            cout << "Error: Enter the correct index for a fighter!" << endl;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        int choice1 = getValidNumber("Select Fighter 1: ", 1, rosterSize);
+        int choice2 = getValidNumber("Select Fighter 2: ", 1, rosterSize);
+
+        if (choice1 == choice2) {
+            cout << "You cannot select the same fighter twice. Try again." << endl;
             continue;
         }
-        cout << "Select Fighter 2: ";
-        if (!(cin >> fighter2)) {
-            cout << "Error: Enter the correct index for a fighter!" << endl;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            continue;
-        }
-        if (fighter1 < 1 || fighter1 > fighters.size()) {
-            cout << "Invalid Fighter 1 selection!" << endl;
-            continue;
-        }
-        if (fighter2 < 1 || fighter2 > fighters.size()) {
-            cout << "Invalid Fighter 2 selection!" << endl;
-            continue;
-        }
-        if (fighter1 == fighter2) {
-            cout << "You cannot select the same fighter twice." << endl;
-            continue;
-        }
-        cout << "Selected Fight: "<< fighters[fighter1 - 1]->getName() << " vs "
-        << fighters[fighter2 - 1]->getName() << endl;
-        return {fighter1 - 1, fighter2 - 1};
+
+        // Convert to 0-index range
+        int id1 = choice1 - 1;
+        int id2 = choice2 - 1;
+
+        cout << endl << "Selected Matchup: " << fighters[id1]->getName() << " vs. " << fighters[id2]->getName() << endl;
+        return {id1, id2};
     }
+}
+
+int selectRounds() {
+    while (true) {
+        int rounds = getValidNumber("Select fight length (3 or 5 rounds): ", 3, 5);
+        if (rounds == 3 || rounds == 5) {
+            return rounds;
+        }
+        cout << "Invalid choice. Fights must be either 3 or 5 rounds." << endl;
+    }
+}
+
+
+// Temporary bridge: copies a Fighter's attributes into FighterStats.
+// Once FightSimulator accepts Fighter& directly, this helper can be removed.
+FighterStats buildFighterStats(const Fighter& fighter) {
+    FighterStats stats;
+    stats.striking = fighter.getStriking();
+    stats.grappling = fighter.getGrappling();
+    stats.defense = fighter.getDefense();
+    stats.stamina = fighter.getStamina();
+    return stats;
+}
+
+void runFight(vector<unique_ptr<Fighter>>& fighters, vector<Fight>& fightHistory) {
+    if (fighters.size() < 2) {
+        cout << "Need at least 2 fighters in the roster to start a fight." << endl;
+        return;
+    }
+
+    pair<int, int> selected = selectFighters(fighters);
+    int id1 = selected.first;
+    int id2 = selected.second;
+    int rounds = selectRounds();
+
+    Fighter& firstFighter = *fighters[id1];
+    Fighter& secondFighter = *fighters[id2];
+
+    // Ensure both fighters start fresh before every fight
+    firstFighter.resetHealth();
+    firstFighter.resetStamina();
+    secondFighter.resetHealth();
+    secondFighter.resetStamina();
+
+    // Run simulation using the temporary FighterStats bridge
+    FighterStats stats1 = buildFighterStats(firstFighter);
+    FighterStats stats2 = buildFighterStats(secondFighter);
+
+    Fight currentFight(id1, id2);
+    FightSimulator simulator(currentFight, stats1, stats2, rounds);
+    simulator.simulateFight();
+
+    // Update win/loss records and save the completed Fight to history
+    int winnerId = currentFight.getWinnerId();
+    bool fighter1Won = (winnerId == id1);
+
+    if (winnerId == id1) {
+        firstFighter.updateRecord(fighter1Won);
+    } else {
+        secondFighter.updateRecord(!fighter1Won);
+    }
+
+    fightHistory.push_back(currentFight);
+
+    // Output Win
+    cout << endl << "Official Winner: " << fighters[winnerId]->getName()
+         << " (Round " << currentFight.getRound() << ")" << endl;
+    cout << "Updated Records -> "
+         << firstFighter.getName() << " (" << firstFighter.getWins() << "-" << firstFighter.getLosses() << ") | "
+         << secondFighter.getName() << " (" << secondFighter.getWins() << "-" << secondFighter.getLosses() << ")" << endl;
 }
 
 // MENU functions
