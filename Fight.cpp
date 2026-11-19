@@ -1,15 +1,13 @@
-
 #include "Fight.h"
 #include <iostream>
 
 // Constructor
-Fight::Fight(int fighter1Id, int fighter2Id) {
-    fighter1Id_ = fighter1Id;
-    fighter2Id_ = fighter2Id;
-    round_ = 1;
-    winnerId_ = -1;
-    result_ = "Not finished";
-}
+Fight::Fight(int fighter1Id, int fighter2Id) :
+    Fight{fighter1Id, fighter2Id, 1, -1, "Not finished"} {}
+
+// Load from history + Overload
+Fight::Fight(int fighter1Id, int fighter2Id, int round, int winnerId, const string& result) :
+    fighter1Id_{fighter1Id}, fighter2Id_{fighter2Id}, round_{round}, winnerId_{winnerId}, result_{result} {}
 
 // Getters
 int Fight::getFighter1Id() const {
@@ -26,6 +24,10 @@ int Fight::getRound() const {
 
 int Fight::getWinnerId() const {
     return winnerId_;
+}
+
+string Fight::getResult() const {
+    return result_;
 }
 
 // Go to the next round
