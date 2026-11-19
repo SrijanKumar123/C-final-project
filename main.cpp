@@ -10,14 +10,43 @@
 #include "Fight.h"
 #include "Fighter.h"
 #include "FightSimulator.h"
-
-using namespace std;
-#include <vector>
 #include <memory>
-#include "Fighter.h"
+
 #include "Striker.h"
 #include "Grappler.h"
 #include<limits>
+
+using namespace std;
+
+// IO Helpers
+
+void clearBadInput() {
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
+
+// Prompts repeatedly until the user enters an integer between minVal and maxVal
+int getValidNumber(const string& prompt, int minVal, int maxVal) {
+    int value = 0;
+
+    while (true) {
+        cout << prompt;
+
+        if (!(cin >> value)) {
+            cout << "Error: Please enter a valid number." << endl;
+            clearBadInput();
+            continue;
+        }
+
+        if (value < minVal || value > maxVal) {
+            cout << "Invalid choice. Please enter a number between "
+                 << minVal << " and " << maxVal << "." << endl;
+            continue;
+        }
+
+        return value;
+    }
+}
 
 void displayFighter(const vector<unique_ptr<Fighter>>& fighters) {
     cout << "=====" << "AVAILABLE FIGHTERS" << "=====" << endl;
@@ -77,9 +106,10 @@ bool loadSaveFile(string fileName) {
     // return true if parse and File Opener is succesful, else FALSE
 }
 
-int main() {
-    vector<Fight> fightHistory;
-    vector<unique_ptr<Fighter>> fighters;
+
+// Fill the Roster (passed in by reference) with Default UFC Fighters!
+void loadDefualtRoster(vector<unique_ptr<Fighter>>& fighters) {
+    fighters.clear();
     fighters.push_back(make_unique<Striker>("Alex Pereira", 95, 90, 89));
     fighters.push_back(make_unique<Fighter>("Jon Jones", 98, 95, 93));
     fighters.push_back(make_unique<Fighter>("GSP", 95, 92, 94));
@@ -88,10 +118,18 @@ int main() {
     fighters.push_back(make_unique<Grappler>("Charles Oliveira", 90, 97, 89));
     fighters.push_back(make_unique<Striker>("Ilia Topuria", 97, 95, 95));
     fighters.push_back(make_unique<Grappler>("Islam Makhachev", 85, 98, 95));
-  
+}
+
+int main() {
+    vector<Fight> fightHistory;
+    vector<unique_ptr<Fighter>> fighters;
+    loadDefualtRoster(fighters); // Load UFC Fighters
+
     cout << "WELCOME to UFC Fight Simulator!" << endl;
+
+    // Loop Menu Options
     menuOption();
-  
+
     displayFighter(fighters);
     pair<int, int> selected = selectFighters(fighters);
     Fighter& firstFighter = *fighters[selected.first];
@@ -100,8 +138,7 @@ int main() {
     firstFighter.resetStamina();
     secondFighter.resetHealth();
     secondFighter.resetStamina();
-    vector<Fighter> roster;
-  
+
     return 0;
 }
 
