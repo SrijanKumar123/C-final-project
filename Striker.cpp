@@ -6,10 +6,9 @@
 #include "Striker.h"
 using namespace std;
 
-Striker::Striker(const string& name, int striking, int grappling, int defense)
-    : Fighter(name, striking, grappling, defense),
-      specialDamage(25) {
-}
+Striker::Striker(const std::string& name, int striking, int grappling, int defense, int wins, int losses)
+    : Fighter{name, striking, grappling, defense, wins, losses},
+      specialDamage{25}  {}
 
 void Striker::specialStrike(Fighter& opponent) {
     if (getStamina() >= 15) {

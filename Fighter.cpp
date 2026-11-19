@@ -6,26 +6,12 @@
 #include "Fighter.h"
 using namespace std;
 
-Fighter::Fighter() {
-    wins_ = 0;
-    losses_ = 0;
-    health_ = 100;
-    stamina_ = 100;
-    striking_ = 100;
-    grappling_ = 100;
-    defense_ = 100;
-}
-
-Fighter::Fighter(const string &name): Fighter() {
-    name_ = name;
-}
-
-Fighter::Fighter(const string &name, int striking, int grappling, int defense): Fighter() {
-    name_ = name;
-    striking_ = striking;
-    grappling_ = grappling;
-    defense_ = defense;
-}
+// ONE Constructor (DEFAULT parameter Values in header file)
+Fighter::Fighter(const std::string& name, int striking, int grappling, int defense, int wins, int losses)
+    : name_{name}, striking_{striking}, grappling_{grappling},
+      defense_{defense}, stamina_{100}, health_{100},
+      wins_{wins}, losses_{losses}
+{}
 
 string Fighter::getName() const {
     return name_;

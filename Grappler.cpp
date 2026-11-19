@@ -6,9 +6,9 @@
 #include "Grappler.h"
 using namespace std;
 
-Grappler::Grappler(const string &name, int striking, int grappling, int defense):
-Fighter(name, striking, grappling, defense), grapplingDamage(25) {
-}
+Grappler::Grappler(const std::string& name, int striking, int grappling, int defense, int wins, int losses)
+    : Fighter{name, striking, grappling, defense, wins, losses},
+      grapplingDamage{25}  {}
 
 void Grappler::grapplingStrike(Fighter &opponent) {
     if (getStamina() >= 15) {

@@ -9,7 +9,12 @@ using namespace std;
 
 class Striker : public Fighter {
 public:
-    Striker(const string& name, int striking, int grappling, int defense);
+    explicit Striker(const std::string& name,
+                 int striking  = 100,
+                 int grappling = 100,
+                 int defense   = 100,
+                 int wins      = 0,
+                 int losses    = 0);
     void specialStrike(Fighter& opponent);
 private:
     int specialDamage;
