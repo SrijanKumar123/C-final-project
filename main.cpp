@@ -4,17 +4,19 @@
  * Josiah M., Srijan K., Ben R.
  */
 
+#include <algorithm>
+#include <iomanip>
 #include <iostream>
 #include <vector>
+#include <memory>
+#include<limits>
 
 #include "Fight.h"
 #include "Fighter.h"
 #include "FightSimulator.h"
-#include <memory>
-
 #include "Striker.h"
 #include "Grappler.h"
-#include<limits>
+
 
 using namespace std;
 
@@ -48,10 +50,75 @@ int getValidNumber(const string& prompt, int minVal, int maxVal) {
     }
 }
 
-void displayFighter(const vector<unique_ptr<Fighter>>& fighters) {
-    cout << "=====" << "AVAILABLE FIGHTERS" << "=====" << endl;
-    for (int i = 0; i < fighters.size(); i++) {
-        cout << i + 1 << ". " << fighters[i]->getName() << endl;
+// Fighters
+void displayFighters(const vector<unique_ptr<Fighter>>& fighters) {
+    cout << endl << "===== AVAILABLE FIGHTERS =====" << endl;
+    cout << left << setw(4) << "#"
+         << setw(20) << "Name"
+         << setw(6) << "STR"
+         << setw(6) << "GRP"
+         << setw(6) << "DEF"
+         << "Record" << endl;
+    cout << string(48, '-') << endl;
+
+    // Output Roster
+    for (int i = 0; i < static_cast<int>(fighters.size()); i++) {
+        const Fighter& f = *fighters[i];
+        cout << left << setw(4) << (i + 1)
+             << setw(20) << f.getName()
+             << setw(6) << f.getStriking()
+             << setw(6) << f.getGrappling()
+             << setw(6) << f.getDefense()
+             << f.getWins() << "-" << f.getLosses() << endl;
+    }
+}
+
+void displayFightHistory(const vector<Fight>& fightHistory,
+                         const vector<unique_ptr<Fighter>>& fighters) {
+    cout << endl << "===== FIGHT HISTORY =====" << endl;
+
+    if (fightHistory.empty()) {
+        cout << "No fights have been simulated yet." << endl;
+        return;
+    }
+
+    for (int i = 0; i < static_cast<int>(fightHistory.size()); i++) {
+        const Fight& fight = fightHistory[i];
+
+        string name1 = fighters[fight.getFighter1Id()]->getName();
+        string name2 = fighters[fight.getFighter2Id()]->getName();
+        string winnerName = fighters[fight.getWinnerId()]->getName();
+
+        cout << (i + 1) << ". " << name1 << " vs. " << name2
+             << " | Winner: " << winnerName
+             << " | Round: " << fight.getRound() << endl;
+    }
+}
+
+// Comparator passed below into std::sort: returns true if 'a' ranks above 'b'
+bool compareByRecord(const Fighter* a, const Fighter* b) {
+    if (a->getWins() != b->getWins()) {
+        return a->getWins() > b->getWins();       // More wins ranks higher
+    }
+    if (a->getLosses() != b->getLosses()) {
+        return a->getLosses() < b->getLosses();   // Fewer losses breaks ties
+    }
+    return a->getName() < b->getName();           // Alphabetical tie-breaker
+}
+
+void displayRankings(const vector<unique_ptr<Fighter>>& fighters) {
+    // COPY pointers into a temporary vector so std::sort does not reorder OG Roster
+    vector<const Fighter*> ranked;
+    for (int i = 0; i < static_cast<int>(fighters.size()); i++) {
+        ranked.push_back(fighters[i].get());
+    }
+
+    sort(ranked.begin(), ranked.end(), compareByRecord);  // built-in SORT!
+
+    cout << endl << "===== FIGHTER RANKINGS =====" << endl;
+    for (int i = 0; i < static_cast<int>(ranked.size()); i++) {
+        cout << (i + 1) << ". " << left << setw(20) << ranked[i]->getName()
+             << ranked[i]->getWins() << "-" << ranked[i]->getLosses() << endl;
     }
 }
 
@@ -91,6 +158,8 @@ pair<int,int> selectFighters(const vector<unique_ptr<Fighter>>& fighters) {
     }
 }
 
+// MENU functions
+
 int menuOption() {
     int option;
     string in {""};
@@ -124,13 +193,13 @@ int main() {
     vector<Fight> fightHistory;
     vector<unique_ptr<Fighter>> fighters;
     loadDefualtRoster(fighters); // Load UFC Fighters
-
+displayFighters(fighters);
     cout << "WELCOME to UFC Fight Simulator!" << endl;
 
     // Loop Menu Options
     menuOption();
 
-    displayFighter(fighters);
+
     pair<int, int> selected = selectFighters(fighters);
     Fighter& firstFighter = *fighters[selected.first];
     Fighter& secondFighter = *fighters[selected.second];
