@@ -8,6 +8,6 @@ TODO:
 
 - Finalize README at end
 
-Possible Expansions: 
+Possible FUTURE Expansions (if time allows): 
 - Allow Custom Fighters to be created from Menu
 - Add Possible virtual dispatch print() to derived Fighter classes ?!

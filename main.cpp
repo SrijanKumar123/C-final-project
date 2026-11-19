@@ -288,27 +288,15 @@ void loadDefualtRoster(vector<unique_ptr<Fighter>>& fighters) {
 }
 
 int main() {
-    // srand(static_cast<unsigned>(time(nullptr))); maybe
+    // srand(static_cast<unsigned>(time(nullptr))); Not sure if needed
 
     vector<Fight> fightHistory;
     vector<unique_ptr<Fighter>> fighters;
     loadDefualtRoster(fighters); // Load UFC Fighters
 
-    //displayFighters(fighters);
-
     // Loop Menu Options
     cout << "WELCOME to UFC Fight Simulator!" << endl;
     runMenuLoop(fighters, fightHistory);
-
-    /*
-    pair<int, int> selected = selectFighters(fighters);
-    Fighter& firstFighter = *fighters[selected.first];
-    Fighter& secondFighter = *fighters[selected.second];
-    firstFighter.resetHealth();
-    firstFighter.resetStamina();
-    secondFighter.resetHealth();
-    secondFighter.resetStamina();
-    */
 
     return 0;
 }
